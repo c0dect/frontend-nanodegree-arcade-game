@@ -6,7 +6,7 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 83;
+    this.x = -50;
     this.y = this.getYCoordinate(); 
     this.speed = this.getRandomSpeed();
 };
@@ -18,12 +18,21 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = this.x + this.speed * dt;
+
+    if(this.x > 600)
+        this.reset();
+};
+
+Enemy.prototype.reset = function() {
+    this.x = -50;
+    this.y = this.getYCoordinate();
+    this.speed = this.getRandomSpeed();
 };
 
 Enemy.prototype.getYCoordinate = function() {
     var yCoordinates = [50, 50 + 83, 50 + 83 + 83 ];
     var randomIndex = Math.floor((Math.random() * yCoordinates.length) + 1);
-    return yCoordinates[randomIndex];
+    return yCoordinates[randomIndex - 1];
 };
 
 Enemy.prototype.getRandomSpeed = function() {
@@ -42,12 +51,17 @@ Enemy.prototype.render = function() {
 
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 50;
-    this.y = 50;
+    this.x = 100;
+    this.y = 300;
+    this.deltaX = 0;
+    this.deltaY = 0;
 };
 
-Player.prototype.update = function(dt) {
-    //this.
+Player.prototype.update = function() {
+    //console.log(dt);
+    //console.log("deltaX" + this.deltaX);
+    //this.x = ;
+    //this.y = 300;
 }
 
 Player.prototype.render = function() {
@@ -56,6 +70,19 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(direction) {
     //Handle direction based movement.
+    console.log(direction);  
+    switch(direction) {
+        case 'left': this.x = (this.x < 50) ? this.x : this.x - 101;
+                     break;
+        case 'right': this.x = (this.x > 400) ? this.x : this.x + 101;
+                      break;
+        case 'up': this.y = (this.y < 50) ? this.y : this.y - 83;
+                   break;
+        case 'down': this.y = (this.y > 350) ? this.y : this.y + 83;
+                     break;
+                   
+    };
+    //console.log(this.deltaX);
 }
 
 
@@ -63,7 +90,7 @@ Player.prototype.handleInput = function(direction) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
+var allEnemies = [new Enemy(), new Enemy(), new Enemy(), new Enemy(), new Enemy()];
 var player = new Player();
 
 // This listens for key presses and sends the keys to your
